@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DprController;
+use App\Http\Controllers\SelectionOptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,3 +19,4 @@ use App\Http\Controllers\DprController;
 //     return view('welcome');
 // });
 Route::get('/', [DprController::class, 'index'])->name('welcome');
+Route::post('/kecamatan', [DprController::class, 'kecamatan'])->name('get.kecamatan');

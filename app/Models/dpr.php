@@ -34,7 +34,18 @@ class Dpr extends Model
         // ->groupBy('partai')
         // ->get();
 
-        if (request('tps') && request('desa') && request('kecamatan') && request('kabupaten')) {
+        if (request('parpol') && request('tps') && request('desa') && request('kecamatan') && request('kabupaten')) {
+            $query->where('partai', request('parpol'))
+            ->where('tps', request('tps'))
+            ->where('desa', request('desa'))
+            ->where('kecamatan', request('kecamatan'))
+            ->where('kabupaten', request('kabupaten'))
+            ->select('nama', 'tps', 'desa', 'kecamatan', 'kabupaten', 'partai', DB::raw('SUM(total) as total_suara'))
+            
+            ->groupBy('nama', 'tps', 'desa', 'kecamatan', 'kabupaten', 'partai')
+            ->orderBy('total_suara', 'desc');
+            return $query;
+        }elseif (request('tps') && request('desa') && request('kecamatan') && request('kabupaten')) {
             $query->where('tps', request('tps'))
             ->where('desa', request('desa'))
             ->where('kecamatan', request('kecamatan'))
@@ -64,6 +75,38 @@ class Dpr extends Model
             $query->where('kabupaten', request('kabupaten'))
             ->select('nama','kabupaten', 'partai', DB::raw('SUM(total) as total_suara'))
             ->groupBy('nama', 'kabupaten', 'partai')
+            ->orderBy('total_suara', 'desc');
+            return $query;
+        }elseif(request('parpol')){
+            $query->where('partai', request('parpol'))
+            ->select('nama','partai', DB::raw('SUM(total) as total_suara'))
+            ->groupBy('nama', 'partai')
+            ->orderBy('total_suara', 'desc');
+            return $query;
+        }elseif (request('parpol') && request('desa') && request('kecamatan') && request('kabupaten')) {
+            $query->where('partai', request('parpol'))
+            ->where('desa', request('desa'))
+            ->where('kecamatan', request('kecamatan'))
+            ->where('kabupaten', request('kabupaten'))
+            ->select('nama', 'tps', 'desa', 'kecamatan', 'kabupaten', 'partai', DB::raw('SUM(total) as total_suara'))
+            
+            ->groupBy('nama','desa', 'kecamatan', 'kabupaten', 'partai')
+            ->orderBy('total_suara', 'desc');
+            return $query;
+        }elseif (request('parpol') && request('kecamatan') && request('kabupaten')) {
+            $query->where('partai', request('parpol'))
+            ->where('kecamatan', request('kecamatan'))
+            ->where('kabupaten', request('kabupaten'))
+            ->select('nama', 'desa', 'kecamatan', 'kabupaten', 'partai', DB::raw('SUM(total) as total_suara'))
+            
+            ->groupBy('nama', 'kecamatan', 'kabupaten', 'partai')
+            ->orderBy('total_suara', 'desc');
+            return $query;
+        }elseif(request('parpol') && request('kabupaten')){
+            $query->where('partai', request('parpol'))
+            ->where('kabupaten', request('kabupaten'))
+            ->select('nama', 'kecamatan', 'kabupaten', 'partai', DB::raw('SUM(total) as total_suara'))
+            ->groupBy('nama','kabupaten', 'partai')
             ->orderBy('total_suara', 'desc');
             return $query;
         }else{

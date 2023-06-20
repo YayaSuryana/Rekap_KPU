@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Dpr;
+use App\Models\Desa;
+use App\Models\Kecamatan;
+use App\Models\Kabupaten;
+use App\Models\Parpol;
 use Illuminate\Support\Facades\DB;
 
 class DprController extends Controller
@@ -31,9 +35,12 @@ class DprController extends Controller
         //     ->select('partai', DB::raw('SUM(total) AS total_suara_partai'))
         //     ->groupBy('partai')
         //     ->pluck('total_suara_partai', 'partai');
-        $collection = Dpr::report()->get();
+        $collection = Dpr::report()->paginate(15);
 
         $partai = Dpr::select('partai', DB::raw('SUM(total) AS total_suara_partai'))
+                ->when(request('parpol'), function ($query){
+                    return $query->where('partai', request('parpol'));
+                })
                 ->when(request('tps'), function ($query) {
                     return $query->where('tps', request('tps'));
                 })
@@ -54,12 +61,40 @@ class DprController extends Controller
                 ->toArray();
 
             // $partai = array_key_exists($data->partai, $partai) ? $partai[$data->partai] : 0;
+            $desa = Desa::where('id_kematan', 'Cigugur')
+            ->orWhere('id_kematan', 'Ciniru')
+            ->orWhere('id_kematan', 'Garawangi')
+            ->orWhere('id_kematan', 'Hantara')
+            ->orWhere('id_kematan', 'Kuningan')
+            ->orWhere('id_kematan', 'Sindangagung')
+            ->orderBy('desa', 'asc')
+            ->get();;
+            $kecamatan = Kecamatan::where('kecamatan', 'Cigugur')
+            ->orWhere('kecamatan', 'Ciniru')
+            ->orWhere('kecamatan', 'Garawangi')
+            ->orWhere('kecamatan', 'Hantara')
+            ->orWhere('kecamatan', 'Kuningan')
+            ->orWhere('kecamatan', 'Sindangagung')
+            ->orderBy('kecamatan', 'asc')
+            ->get();
+        
+            $kabupaten = Kabupaten::all();
+            $parpol = Parpol::all();
 
-
-        return view('welcome', compact('collection','partai'));
+        return view('welcome', compact('collection','partai','desa','kecamatan','kabupaten','parpol'));
 
 
         // return view('welcome', compact('collection'));
+    }
+
+    public function kecamatan(request $request)
+    {
+        $kabupatens = $request->kabupatens;
+        $kecamatans = Kecamatan::where('kabupaten_id', $kabupatens)->get();
+        // dd($kecamatans);
+        foreach($kecamatans as $kecamatan){
+            echo "<option value='$kecamatan->kecamatan'>$kecamatan->kecamatan</option>";
+        }
     }
 
     /**
