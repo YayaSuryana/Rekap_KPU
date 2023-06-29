@@ -35,12 +35,10 @@ class DprController extends Controller
         //     ->select('partai', DB::raw('SUM(total) AS total_suara_partai'))
         //     ->groupBy('partai')
         //     ->pluck('total_suara_partai', 'partai');
-        $collection = Dpr::report()->paginate(15);
+        $collection = Dpr::report()->get();
 
         $partai = Dpr::select('partai', DB::raw('SUM(total) AS total_suara_partai'))
-                ->when(request('parpol'), function ($query){
-                    return $query->where('partai', request('parpol'));
-                })
+                
                 ->when(request('tps'), function ($query) {
                     return $query->where('tps', request('tps'));
                 })
@@ -52,6 +50,9 @@ class DprController extends Controller
                 })
                 ->when(request('kabupaten'), function ($query) {
                     return $query->where('kabupaten', request('kabupaten'));
+                })
+                ->when(request('partai'), function ($query){
+                    return $query->where('partai', request('partai'))->havingRaw('SUM(total) > 0');
                 })
                 ->groupBy('partai')
                 ->pluck('total_suara_partai', 'partai')

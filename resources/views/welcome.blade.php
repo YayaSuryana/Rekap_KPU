@@ -15,6 +15,15 @@
         <h1>Search</h1>
         <div class="form-search">
         <form action="{{ route('welcome') }}" method="GET">
+            <div class="row">
+            <div class="col-md-12 mb-3">
+              <select id="partai" name="partai" class="form-control">
+                <option value="">-- Pilih Partai --</option>
+                  @foreach ($parpol as $item)
+                      <option value="{{ $item->nama }}">{{ $item->nama }} - {{$item->singkatan}} </option>
+                  @endforeach
+              </select>
+            </div>
           <div class="row mt-4">
           
             <div class="col-md-3">
@@ -78,13 +87,7 @@
             
           
             <div class="row mt-2 mb-2">
-            <div class="col-md-12 mb-3">
-              <select id="parpol" name="parpol" class="form-control">
-                  <option value="">-- Pilih Partai --</option>
-                  @foreach ($parpol as $item)
-                      <option value="{{ $item->nama }}">{{ $item->nama }} ({{$item->singkatan}}) </option>
-                  @endforeach
-              </select>
+            
             </div>
             <div class="col-md-12">
               <button type="submit" class="btn btn-md btn-primary w-100">Cari</button>
@@ -93,7 +96,7 @@
           </div>
         </form>
         </div>
-      @if(request('tps') && request('desa') && request('kecamatan') && request('kabupaten'))
+      @if(request('partai') && request('tps') && request('desa') && request('kecamatan') && request('kabupaten'))
         <table id="myTable" class="table display table-striped">
             <thead>
                 <th>NO</th>
@@ -102,13 +105,13 @@
                 <th>Desa</th>
                 <th>Kecamatan</th>
                 <th>Kabupaten</th>
-                <th>Nama Partai</th>
                 <th>Suara</th>
                 <th>Persentase yang didapatkan</th>
                 <th>Jumlah suara yang didapatkan partai</th>
             </thead>
             <tbody>
                 @foreach($collection  as $key => $data)
+                    
                     <tr>
                         <td>{{$key+1}}</td>
                         <td>{{$data->nama}}</td>
@@ -117,7 +120,7 @@
                         <td>{{ $data->kecamatan }}</td>
                         <td>{{ $data->kabupaten }}</td>
                         <td>{{ $data->partai }}</td>
-                        <td>{{ $data->total_suara }}</td>
+                        <td>{{ number_format($data->total_suara, 0, ',', '.') }}</td>
                         <td>
                         @php
                             $partaiValue = isset($partai[$data->partai]) ? $partai[$data->partai] : 0;
@@ -126,13 +129,13 @@
                         {{ number_format($percentage, 2) }} %
                     </td>
                     <td>
-                        {{ $partaiValue }}
+                        {{number_format($partaiValue, 0, ',','.')}}
                     </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-      @elseif(request('desa') && request('kecamatan') && request('kabupaten'))
+      @elseif(request('partai') && request('desa') && request('kecamatan') && request('kabupaten'))
       <table id="myTable" class="table display table-striped">
             <thead>
                 <th>NO</th>
@@ -140,7 +143,6 @@
                 <th>Desa</th>
                 <th>Kecamatan</th>
                 <th>Kabupaten</th>
-                <th>Nama Partai</th>
                 <th>Suara</th>
                 <th>Persentase yang didapatkan</th>
                 <th>Jumlah suara yang didapatkan partai</th>
@@ -154,7 +156,7 @@
                     <td>{{ $data->kecamatan }}</td>
                     <td>{{ $data->kabupaten }}</td>
                     <td>{{ $data->partai }}</td>
-                    <td>{{ $data->total_suara }}</td>
+                    <td>{{ number_format($data->total_suara, 0, ',', '.') }}</td>
                     <td>
                         @php
                             $partaiValue = isset($partai[$data->partai]) ? $partai[$data->partai] : 0;
@@ -163,7 +165,7 @@
                         {{ number_format($percentage, 2) }} %
                     </td>
                     <td>
-                        {{ $partaiValue }}
+                        {{number_format($partaiValue, 0, ',','.')}}
                     </td>
                 </tr>
                 @endforeach
@@ -189,7 +191,7 @@
                         <td>{{ $data->kecamatan }}</td>
                         <td>{{ $data->kabupaten }}</td>
                         <td>{{ $data->partai }}</td>
-                        <td>{{ $data->total_suara }}</td>
+                        <td>{{ number_format($data->total_suara, 0, ',', '.') }}</td>
                         <td>
                         @php
                             $partaiValue = isset($partai[$data->partai]) ? $partai[$data->partai] : 0;
@@ -198,7 +200,7 @@
                         {{ number_format($percentage, 2) }} %
                     </td>
                     <td>
-                        {{ $partaiValue }}
+                        {{number_format($partaiValue, 0, ',','.')}}
                     </td>
                     </tr>
                 @endforeach
@@ -222,7 +224,7 @@
                         <td>{{$data->nama}}</td>
                         <td>{{ $data->kabupaten }}</td>
                         <td>{{ $data->partai }}</td>
-                        <td>{{ $data->total_suara }}</td>
+                        <td>{{ number_format($data->total_suara, 0, ',', '.') }}</td>
                         <td>
                         @php
                             $partaiValue = isset($partai[$data->partai]) ? $partai[$data->partai] : 0;
@@ -231,189 +233,70 @@
                         {{ number_format($percentage, 2) }} %
                     </td>
                     <td>
-                        {{ $partaiValue }}
+                        {{number_format($partaiValue, 0, ',','.')}}
                     </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-        @elseif(request('parpol') && request('tps') && request('desa') && request('kecamatan') && request('kabupaten'))
+        @elseif(request('partai') && request('kabupaten'))
         <table id="myTable" class="table display table-striped">
             <thead>
                 <th>NO</th>
                 <th>Nama</th>
-                <th>TPS</th>
-                <th>Desa</th>
-                <th>Kecamatan</th>
                 <th>Kabupaten</th>
-                <th>Nama Partai</th>
                 <th>Suara</th>
                 <th>Persentase yang didapatkan</th>
                 <th>Jumlah suara yang didapatkan partai</th>
             </thead>
             <tbody>
                 @foreach($collection  as $key => $data)
-                    <tr>
-                        <td>{{$key+1}}</td>
-                        <td>{{$data->nama}}</td>
-                        <td>{{$data->tps}}</td>
-                        <td>{{ $data->desa }}</td>
-                        <td>{{ $data->kecamatan }}</td>
-                        <td>{{ $data->kabupaten }}</td>
-                        <td>{{ $data->partai }}</td>
-                        <td>{{ $data->total_suara }}</td>
+                    @php
+                        $partaiValue = isset($partai[$data->partai]) ? $partai[$data->partai] : 0;
+                        $percentage = $partaiValue != 0 ? ($data->total_suara / $partaiValue) * 100 : 0;
+                    @endphp
+
+                    @if ($partaiValue != 0)
+                        <tr>
+                            <td>{{ $key + 1 }}</td>
+                            <td>{{ $data->nama }}</td>
+                            <td>{{ $data->kabupaten }}</td>
+                            <td>{{ number_format($data->total_suara, 0, ',', '.') }}</td>
+                            <td>{{ number_format($percentage, 2) }}%</td>
+                            <td>{{ number_format($partaiValue, 0, ',', '.') }}</td>
+                        </tr>
+                    @endif
+                @endforeach
+            </tbody>
+        </table>
+        @elseif(request('partai'))
+            <table id="myTable" class="table display table-striped">
+                <thead>
+                    <th>NO</th>
+                    <th>Nama</th>
+                    <th>Suara</th>
+                    <th>Persentase yang didapatkan</th>
+                    <th>Jumlah suara yang didapatkan partai</th>
+                </thead>
+                <tbody>
+                    @foreach($collection  as $key => $data)
+                        <tr>
+                            <td>{{$key+1}}</td>
+                            <td>{{$data->nama}}</td>
+                            <td>{{ number_format($data->total_suara, 0, ',', '.') }}</td>
+                            <td>
+                            @php
+                                $partaiValue = isset($partai[$data->partai]) ? $partai[$data->partai] : 0;
+                                $percentage = $partaiValue != 0 ? ($data->total_suara / $partaiValue) * 100 : 0;
+                            @endphp
+                            {{ number_format($percentage, 2) }} %
+                        </td>
                         <td>
-                        @php
-                            $partaiValue = isset($partai[$data->partai]) ? $partai[$data->partai] : 0;
-                            $percentage = $partaiValue != 0 ? ($data->total_suara / $partaiValue) * 100 : 0;
-                        @endphp
-                        {{ number_format($percentage, 2) }} %
-                    </td>
-                    <td>
-                        {{ $partaiValue }}
-                    </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        @elseif(request('parpol') && request('desa') && request('kecamatan') && request('kabupaten'))
-      <table id="myTable" class="table display table-striped">
-            <thead>
-                <th>NO</th>
-                <th>Nama</th>
-                <th>Desa</th>
-                <th>Kecamatan</th>
-                <th>Kabupaten</th>
-                <th>Nama Partai</th>
-                <th>Suara</th>
-                <th>Persentase yang didapatkan</th>
-                <th>Jumlah suara yang didapatkan partai</th>
-            </thead>
-            <tbody>
-                @foreach($collection  as $key => $data)
-                <tr>
-                    <td>{{ $key + 1 }}</td>
-                    <td>{{ $data->nama }}</td>
-                    <td>{{ $data->desa }}</td>
-                    <td>{{ $data->kecamatan }}</td>
-                    <td>{{ $data->kabupaten }}</td>
-                    <td>{{ $data->partai }}</td>
-                    <td>{{ $data->total_suara }}</td>
-                    <td>
-                        @php
-                            $partaiValue = isset($partai[$data->partai]) ? $partai[$data->partai] : 0;
-                            $percentage = $partaiValue != 0 ? ($data->total_suara / $partaiValue) * 100 : 0;
-                        @endphp
-                        {{ number_format($percentage, 2) }} %
-                    </td>
-                    <td>
-                        {{ $partaiValue }}
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-      @elseif(request('parpol') && request('kecamatan') && request('kabupaten'))
-      <table id="myTable" class="table display table-striped">
-            <thead>
-                <th>NO</th>
-                <th>Nama</th>
-                <th>Kecamatan</th>
-                <th>Kabupaten</th>
-                <th>Nama Partai</th>
-                <th>Suara</th>
-                <th>Persentase yang didapatkan</th>
-                <th>Jumlah suara yang didapatkan partai</th>
-            </thead>
-            <tbody>
-                @foreach($collection  as $key => $data)
-                    <tr>
-                        <td>{{$key+1}}</td>
-                        <td>{{$data->nama}}</td>
-                        <td>{{ $data->kecamatan }}</td>
-                        <td>{{ $data->kabupaten }}</td>
-                        <td>{{ $data->partai }}</td>
-                        <td>{{ $data->total_suara }}</td>
-                        <td>
-                        @php
-                            $partaiValue = isset($partai[$data->partai]) ? $partai[$data->partai] : 0;
-                            $percentage = $partaiValue != 0 ? ($data->total_suara / $partaiValue) * 100 : 0;
-                        @endphp
-                        {{ number_format($percentage, 2) }} %
-                    </td>
-                    <td>
-                        {{ $partaiValue }}
-                    </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-      @elseif(request('parpol') && request('kabupaten'))
-      <table id="myTable" class="table display table-striped">
-            <thead>
-                <th>NO</th>
-                <th>Nama</th>
-                <th>Kabupaten</th>
-                <th>Nama Partai</th>
-                <th>Suara</th>
-                <th>Persentase yang didapatkan</th>
-                <th>Jumlah suara yang didapatkan partai</th>
-            </thead>
-            <tbody>
-                @foreach($collection  as $key => $data)
-                    <tr>
-                        <td>{{$key+1}}</td>
-                        <td>{{$data->nama}}</td>
-                        <td>{{ $data->kabupaten }}</td>
-                        <td>{{ $data->partai }}</td>
-                        <td>{{ $data->total_suara }}</td>
-                        <td>
-                        @php
-                            $partaiValue = isset($partai[$data->partai]) ? $partai[$data->partai] : 0;
-                            $percentage = $partaiValue != 0 ? ($data->total_suara / $partaiValue) * 100 : 0;
-                        @endphp
-                        {{ number_format($percentage, 2) }} %
-                    </td>
-                    <td>
-                        {{ $partaiValue }}
-                    </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        @elseif(request('parpol'))
-      <table id="myTable" class="table display table-striped">
-            <thead>
-                <th>NO</th>
-                <th>Nama</th>
-                <th>Kabupaten</th>
-                <th>Nama Partai</th>
-                <th>Suara</th>
-                <th>Persentase yang didapatkan</th>
-                <th>Jumlah suara yang didapatkan partai</th>
-            </thead>
-            <tbody>
-                @foreach($collection  as $key => $data)
-                    <tr>
-                        <td>{{$key+1}}</td>
-                        <td>{{$data->nama}}</td>
-                        <td>{{ $data->kabupaten }}</td>
-                        <td>{{ $data->partai }}</td>
-                        <td>{{ $data->total_suara }}</td>
-                        <td>
-                        @php
-                            $partaiValue = isset($partai[$data->partai]) ? $partai[$data->partai] : 0;
-                            $percentage = $partaiValue != 0 ? ($data->total_suara / $partaiValue) * 100 : 0;
-                        @endphp
-                        {{ number_format($percentage, 2) }} %
-                    </td>
-                    <td>
-                        {{ $partaiValue }}
-                    </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+                            {{number_format($partaiValue, 0, ',','.')}}
+                        </td>
+                        </tr>
+                    @endforeach
+            </table>
       @endif
     </div>
     <script>
