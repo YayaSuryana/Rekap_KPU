@@ -19,4 +19,6 @@ use App\Http\Controllers\SelectionOptionController;
 //     return view('welcome');
 // });
 Route::get('/', [DprController::class, 'index'])->name('welcome');
-Route::post('/kecamatan', [DprController::class, 'kecamatan'])->name('get.kecamatan');
+Route::get('/getkecamatan', [DprController::class, 'getKecamatan']);
+Route::get('/getdesa', [DprController::class, 'getDesa']);
+// Route::post('/kecamatan', [DprController::class, 'kecamatan'])->name('get.kecamatan');

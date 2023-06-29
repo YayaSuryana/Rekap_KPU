@@ -12,6 +12,19 @@ use Illuminate\Support\Facades\DB;
 
 class DprController extends Controller
 {
+    public function getKecamatan(Request $request){
+        $kecamatan = Kecamatan::where("id_kabupaten", $request->kabID)
+        ->orderBy('kecamatan','asc')
+        ->pluck('kecamatan');
+        return response()->json($kecamatan);
+    }
+    
+    public function getDesa(Request $request){
+        $desa = Desa::where("id_kematan", $request->kecID)
+        ->orderBy('desa','asc')
+        ->pluck('desa');
+        return response()->json($desa);
+    }
     /**
      * Display a listing of the resource.
      *
