@@ -34,7 +34,7 @@
         </nav>
     <div class="container mt-5">
         <h1>DPR RI</h1>
-        <h3>{{$collection->pluck('kabupaten')->first()}} - {{$collection->pluck('kecamatan')->first()}} - {{$collection->pluck('desa')->first()}} - {{$collection->pluck('tps')->first()}}</h3>
+        <h3>{{$kab}} - {{$kec}} - {{$des}} - {{$tps}}</h3>
         <div class="card">
             <div class="card-header">
                 <div class="form-search">
@@ -113,8 +113,8 @@
                             <th>Nama</th>
                             <th>Partai</th>
                             <th>Suara</th>
+                            <th>% TPS</th>
                             <th>% Partai</th>
-                            <th>Suara Partai</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -126,14 +126,21 @@
                                 <td>{{ $data->partai }}</td>
                                 <td>{{ number_format($data->total_suara, 0, ',', '.') }}</td>
                                 <td>
+                                    @php
+                                        $tpsValue = isset($tpsVal[$data->tps]) ? $tpsVal[$data->tps] : 0;
+                                        $percentageTps = $tpsValue != 0 ? ($data->total_suara / $tpsValue) * 100 : 0;
+                                    @endphp
+                                    {{ number_format($percentageTps, 2) }} % / {{number_format($tpsValue, 0, ',','.')}}
+                                </td>
+                                <td>
                                 @php
                                     $partaiValue = isset($partai[$data->partai]) ? $partai[$data->partai] : 0;
                                     $percentage = $partaiValue != 0 ? ($data->total_suara / $partaiValue) * 100 : 0;
                                 @endphp
-                                {{ number_format($percentage, 2) }} %
+                                {{ number_format($percentage, 2) }} % / {{number_format($partaiValue, 0, ',','.')}}
                             </td>
                             <td>
-                                {{number_format($partaiValue, 0, ',','.')}}
+                                
                             </td>
                             </tr>
                         @endforeach
@@ -147,8 +154,8 @@
                             <th>Nama</th>
                             <th>Partai</th>
                             <th>Suara</th>
+                            <th>% Desa</th>
                             <th>% Partai</th>
-                            <th>Suara Partai</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -160,13 +167,17 @@
                             <td>{{ number_format($data->total_suara, 0, ',', '.') }}</td>
                             <td>
                                 @php
+                                    $desaValue = isset($desaVal[$data->desa]) ? $desaVal[$data->desa] : 0;
+                                    $percentageDesa = $desaValue != 0 ? ($data->total_suara / $desaValue) * 100 : 0;
+                                @endphp
+                                {{ number_format($percentageDesa, 2) }} % | {{number_format($desaValue, 0, ',','.')}}
+                            </td>
+                            <td>
+                                @php
                                     $partaiValue = isset($partai[$data->partai]) ? $partai[$data->partai] : 0;
                                     $percentage = $partaiValue != 0 ? ($data->total_suara / $partaiValue) * 100 : 0;
                                 @endphp
-                                {{ number_format($percentage, 2) }} %
-                            </td>
-                            <td>
-                                {{number_format($partaiValue, 0, ',','.')}}
+                                {{ number_format($percentage, 2) }} % | {{number_format($partaiValue, 0, ',','.')}}
                             </td>
                         </tr>
                         @endforeach
@@ -180,8 +191,8 @@
                             <th>Nama</th>
                             <th>Nama Partai</th>
                             <th>Suara</th>
+                            <th>% Kecamatan</th>
                             <th>% Partai</th>
-                            <th>Suara Partai</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -192,15 +203,19 @@
                                 <td>{{ $data->partai }}</td>
                                 <td>{{ number_format($data->total_suara, 0, ',', '.') }}</td>
                                 <td>
-                                @php
-                                    $partaiValue = isset($partai[$data->partai]) ? $partai[$data->partai] : 0;
-                                    $percentage = $partaiValue != 0 ? ($data->total_suara / $partaiValue) * 100 : 0;
-                                @endphp
-                                {{ number_format($percentage, 2) }} %
-                            </td>
-                            <td>
-                                {{number_format($partaiValue, 0, ',','.')}}
-                            </td>
+                                    @php
+                                        $kecamatanValue = isset($kecamatanVal[$data->kecamatan]) ? $kecamatanVal[$data->kecamatan] : 0;
+                                        $percentageKecamatan = $kecamatanValue != 0 ? ($data->total_suara / $kecamatanValue) * 100 : 0;
+                                    @endphp
+                                    {{ number_format($percentageKecamatan, 2) }} % | {{number_format($kecamatanValue, 0, ',','.')}}
+                                </td>
+                                <td>
+                                    @php
+                                        $partaiValue = isset($partai[$data->partai]) ? $partai[$data->partai] : 0;
+                                        $percentage = $partaiValue != 0 ? ($data->total_suara / $partaiValue) * 100 : 0;
+                                    @endphp
+                                    {{ number_format($percentage, 2) }} % | {{number_format($partaiValue, 0, ',','.')}}
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -213,8 +228,8 @@
                             <th>Nama</th>
                             <th>Nama Partai</th>
                             <th>Suara</th>
+                            <th>% Kabupaten</th>
                             <th>% Partai</th>
-                            <th>Suara Partai</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -226,13 +241,20 @@
                                 <td>{{ number_format($data->total_suara, 0, ',', '.') }}</td>
                                 <td>
                                     @php
+                                        $kabupatenValue = isset($kabupatenVal[$data->kabupaten]) ? $kabupatenVal[$data->kabupaten] : 0;
+                                        $percentageKabpaten = $kabupatenValue != 0 ? ($data->total_suara / $kabupatenValue) * 100 : 0;
+                                    @endphp
+                                    {{ number_format($percentageKabpaten, 2) }} % | {{number_format($kabupatenValue, 0, ',','.')}}
+                                </td>
+                                <td>
+                                    @php
                                         $partaiValue = isset($partai[$data->partai]) ? $partai[$data->partai] : 0;
                                         $percentage = $partaiValue != 0 ? ($data->total_suara / $partaiValue) * 100 : 0;
                                     @endphp
-                                    {{ number_format($percentage, 2) }} %
+                                    {{ number_format($percentage, 2) }} % | {{number_format($partaiValue, 0, ',','.')}}
                                 </td>
                                 <td>
-                                    {{number_format($partaiValue, 0, ',','.')}}
+                                    
                                 </td>
                             </tr>
                         @endforeach

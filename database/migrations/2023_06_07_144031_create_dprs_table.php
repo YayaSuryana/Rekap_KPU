@@ -13,13 +13,14 @@ class CreateDprsTable extends Migration
      */
     public function up()
     {
-        Schema::create('Dprs', function (Blueprint $table) {
+        Schema::create('dprs', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
             $table->string('partai');
             $table->string('tps');
             $table->string('desa');
             $table->string('kecamatan');
+            $table->string('dapil');
             $table->string('kabupaten');
             $table->integer('total');
             $table->timestamps();
@@ -33,6 +34,6 @@ class CreateDprsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Dprs');
+        Schema::dropIfExists('dprs');
     }
 }
