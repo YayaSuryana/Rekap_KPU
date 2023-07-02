@@ -175,10 +175,6 @@ class DprController extends Controller
         return view('dprd');
     }
 
-    public function dprp() {
-        return view('dprp');
-    }
-
     public function kecamatan(request $request)
     {
         $kabupatens = $request->kabupatens;
