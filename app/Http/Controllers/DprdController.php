@@ -1,44 +1,26 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use App\Models\Dpr;
+use App\Models\Dprd;
 use App\Models\Desa;
 use App\Models\Kecamatan;
 use App\Models\Kabupaten;
 use App\Models\Parpol;
 use Illuminate\Support\Facades\DB;
 
-class DprController extends Controller
+use Illuminate\Http\Request;
+
+class DprdController extends Controller
 {
-    public function getKecamatan(Request $request){
-        $kecamatan = Kecamatan::where("id_kabupaten", $request->kabID)
-        ->orderBy('kecamatan','asc')
-        ->pluck('kecamatan');
-        return response()->json($kecamatan);
-    }
-    
-    public function getDesa(Request $request){
-        $desa = Desa::where("id_kematan", $request->kecID)
-        ->orderBy('desa','asc')
-        ->pluck('desa');
-        return response()->json($desa);
-    }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $kab = request('kabupaten');
         $kec = request('kecamatan');
         $des = request('desa');
         $tps = request('tps');
-        $collection = Dpr::report()->get();
+        $collection = Dprd::report()->get();
 
-        $partai = Dpr::select('partai', DB::raw('SUM(total) AS total_suara_partai'))
+        $partai = Dprd::select('partai', DB::raw('SUM(total) AS total_suara_partai'))
                 
         ->when(request('tps'), function ($query) {
             return $query->where('tps', request('tps'));
@@ -62,7 +44,7 @@ class DprController extends Controller
         })
         ->toArray();
 
-            $tpsVal = Dpr::select('tps', DB::raw('SUM(total) AS total_suara_tps'))
+            $tpsVal = Dprd::select('tps', DB::raw('SUM(total) AS total_suara_tps'))
 
             ->when(request('tps'), function ($query) {
                 return $query->where('tps', request('tps'));
@@ -89,7 +71,7 @@ class DprController extends Controller
             
             
             
-            $desaVal = Dpr::select('desa', DB::raw('SUM(total) AS total_suara_desa'))
+            $desaVal = Dprd::select('desa', DB::raw('SUM(total) AS total_suara_desa'))
         
             ->when(request('tps'), function ($query) {
                 return $query->where('tps', request('tps'));
@@ -114,7 +96,7 @@ class DprController extends Controller
             ->toArray();
 
 
-            $kecamatanVal = Dpr::select('kecamatan', DB::raw('SUM(total) AS total_suara_kecamatan'))
+            $kecamatanVal = Dprd::select('kecamatan', DB::raw('SUM(total) AS total_suara_kecamatan'))
         
             ->when(request('tps'), function ($query) {
                 return $query->where('tps', request('tps'));
@@ -138,7 +120,7 @@ class DprController extends Controller
             })
             ->toArray();
             
-            $kabupatenVal = Dpr::select('kabupaten', DB::raw('SUM(total) AS total_suara_kabupaten'))
+            $kabupatenVal = Dprd::select('kabupaten', DB::raw('SUM(total) AS total_suara_kabupaten'))
         
             ->when(request('tps'), function ($query) {
                 return $query->where('tps', request('tps'));
@@ -165,87 +147,7 @@ class DprController extends Controller
             $kabupaten = Kabupaten::all();
             $parpol = Parpol::all();
 
-        return view('dprri', compact('collection','partai','tpsVal','desaVal','kecamatanVal','kabupatenVal','kabupaten','parpol','kab','kec','des','tps'));
+        return view('dprd', compact('collection','partai','tpsVal','desaVal','kecamatanVal','kabupatenVal','kabupaten','parpol','kab','kec','des','tps'));
 
-    }
-
-    public function dprd() {
-        return view('dprd');
-    }
-
-    public function kecamatan(request $request)
-    {
-        $kabupatens = $request->kabupatens;
-        $kecamatans = Kecamatan::where('kabupaten_id', $kabupatens)->get();
-        // dd($kecamatans);
-        foreach($kecamatans as $kecamatan){
-            echo "<option value='$kecamatan->kecamatan'>$kecamatan->kecamatan</option>";
-        }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }
