@@ -12,24 +12,6 @@ use Illuminate\Support\Facades\DB;
 
 class DprpController extends Controller
 {
-    public function getKecamatan(Request $request){
-        $kecamatan = Kecamatan::where("id_kabupaten", $request->kabID)
-        ->orderBy('kecamatan','asc')
-        ->pluck('kecamatan');
-        return response()->json($kecamatan);
-    }
-    
-    public function getDesa(Request $request){
-        $desa = Desa::where("id_kematan", $request->kecID)
-        ->orderBy('desa','asc')
-        ->pluck('desa');
-        return response()->json($desa);
-    }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $kab = request('kabupaten');
@@ -165,6 +147,7 @@ class DprpController extends Controller
             $kabupaten = Kabupaten::all();
             $parpol = Parpol::all();
 
-        return view('welcome', compact('collection','partai','tpsVal','desaVal','kecamatanVal','kabupatenVal','kabupaten','parpol','kab','kec','des','tps'));
+        return view('dprp', compact('collection','partai','tpsVal','desaVal','kecamatanVal','kabupatenVal','kabupaten','parpol','kab','kec','des','tps'));
+
     }
 }

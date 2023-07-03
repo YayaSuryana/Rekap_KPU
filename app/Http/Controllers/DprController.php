@@ -167,8 +167,6 @@ class DprController extends Controller
 
         return view('dprri', compact('collection','partai','tpsVal','desaVal','kecamatanVal','kabupatenVal','kabupaten','parpol','kab','kec','des','tps'));
 
-
-        // return view('welcome', compact('collection'));
     }
 
     public function dprd() {

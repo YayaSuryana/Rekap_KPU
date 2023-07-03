@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DprController;
+use App\Http\Controllers\DprpController;
 use App\Http\Controllers\SelectionOptionController;
 
 /*
@@ -20,7 +21,7 @@ use App\Http\Controllers\SelectionOptionController;
 // });
 Route::get('/', [DprController::class, 'index'])->name('welcome');
 Route::get('/dprd', [DprController::class, 'dprd'])->name('dprd');
-Route::get('/dprp', [DprController::class, 'dprp'])->name('dprp');
+Route::get('/dprp', [DprpController::class, 'index'])->name('dprp');
 Route::get('/getkecamatan', [DprController::class, 'getKecamatan']);
 Route::get('/getdesa', [DprController::class, 'getDesa']);
 // Route::post('/kecamatan', [DprController::class, 'kecamatan'])->name('get.kecamatan');
